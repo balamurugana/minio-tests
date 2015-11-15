@@ -137,9 +137,10 @@ func updateMinioClient() {
 
 func main() {
 	verifyRuntime()
-
-	serverAlias := "localhost"
-	err := runTests(serverAlias)
+	if len(os.Args) < 1 {
+		log.Fatal("Invalid number of arguments please make sure \n\t$ ./minio-tests <alias> <corpus-datadir>\n")
+	}
+	err := runTests(os.Args[1], os.Args[2])
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -159,7 +160,11 @@ func mcCmd(args ...string) (err error) {
 	return nil
 }
 
-func runTests(serverAlias string) error {
+const (
+	recursive = "..."
+)
+
+func runTests(serverAlias, directory string) error {
 	err := mcCmd("ls", serverAlias)
 	if err != nil {
 		return err
@@ -172,11 +177,11 @@ func runTests(serverAlias string) error {
 	if err != nil {
 		return err
 	}
-	err = mcCmd("cp", "go...", filepath.Join(serverAlias, "testbucket"))
+	err = mcCmd("cp", directory+recursive, filepath.Join(serverAlias, "testbucket"))
 	if err != nil {
 		return err
 	}
-	err = mcCmd("rm", "--force", filepath.Join(serverAlias, "testbucket")+"...")
+	err = mcCmd("rm", "--force", filepath.Join(serverAlias, "testbucket")+recursive)
 	if err != nil {
 		return err
 	}

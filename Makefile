@@ -7,7 +7,8 @@ checkgopath:
 verifiers: checkgopath
 
 gomake-all: verifiers
-	@GO15VENDOREXPERIMENT=1 go build -o $(GOPATH)/bin/minio-tests github.com/minio/minio-tests/cmd
+	@GO15VENDOREXPERIMENT=1 go build -o $(GOPATH)/bin/minio-tests github.com/minio/minio-tests/cmd/minio-tests
+	@GO15VENDOREXPERIMENT=1 go build -o $(GOPATH)/bin/run-minio github.com/minio/minio-tests/cmd/run-minio
 
 install: gomake-all
 
